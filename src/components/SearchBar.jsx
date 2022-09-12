@@ -39,7 +39,7 @@ export default function SearchBar() {
     return (
         <>
         <div className='flexSearch'>
-            <TextField fullWidth label="Search" value={val} onChange={onChangeSearch} id="fullWidth" />
+            <TextField fullWidth label="🌟🌟 Type any word over here and see the magic 🌟🌟" value={val} onChange={onChangeSearch} id="fullWidth" />
             <List className='item-list'>
                 {item?item.map((item)=>{
                     return(
