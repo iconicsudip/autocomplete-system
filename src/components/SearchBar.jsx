@@ -20,20 +20,22 @@ export default function SearchBar() {
             setItem([])
         }
         if(s || e.target.value!==''){
-            console.log([s,e.target.value])
             setItem(s);
         }
     }
     const getItem = (e)=>{
-        console.log(e.target)
-        const text = e.target.innerHTML.split("<b>").join("").split("</b>").join("");
-        setVal(text);
-        var s = search(e.target.innerText,node);
-        if(s===false){
-            setItem([])
-        }
-        if(s || e.target.innerText!==''){
-            setItem(s);
+        try{
+            const text = e.target.innerHTML.split('</li>')[0].split('<li>')[1].split('<b>')[1].split('</b>').join("");
+            setVal(text);
+            var s = search(text,node);
+            if(s===false){
+                setItem([])
+            }
+            if(s ){
+                setItem(s);
+            }
+        }catch{
+            console.log("AUTO")
         }
     }
     return (
@@ -44,8 +46,8 @@ export default function SearchBar() {
                 {item?item.map((item)=>{
                     return(
                         <ListItem disablePadding>
-                            <ListItemButton>
-                                <li  onClick={getItem}><b>{val}</b>{item.substring(val.length)}</li>
+                            <ListItemButton onClick={getItem}>
+                                <li  ><b>{val}</b>{item.substring(val.length)}</li>
                             </ListItemButton>
                         </ListItem>
                     )
