@@ -1,17 +1,25 @@
 import React,{useState} from 'react';
 import TextField from '@mui/material/TextField';
 import {Node,add,search} from '../search.js';
-import items from '../database';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import {Link} from "react-router-dom";
 
 export default function SearchBar() {
     const [val,setVal] = useState("");
     const [item,setItem] = useState([]);
     const node = new Node('');
-    for (let str in items){
-        add(items[str],node);
+    const [data,setData] = useState(()=>localStorage.getItem("database")?JSON.parse(localStorage.getItem("database")):null);
+    const setTrie = (data)=>{
+        for (let str in data){
+            add(data[str],node);
+        }
+    }
+    if(data===null){
+        console.log("No data exist in database , Create some data in database section")
+    }else{
+        setTrie(data);
     }
     const onChangeSearch = (e)=>{
         setVal(e.target.value);
@@ -41,18 +49,24 @@ export default function SearchBar() {
     return (
         <>
         <div className='flexSearch'>
-            <TextField fullWidth label="🌟🌟 Type any word over here and see the magic 🌟🌟"  autoComplete='off' value={val} onChange={onChangeSearch} id="fullWidth" />
-            <List className='item-list'>
-                {item?item.map((item)=>{
-                    return(
-                        <ListItem disablePadding>
-                            <ListItemButton onClick={getItem}>
-                                <li  ><b>{val}</b>{item.substring(val.length)}</li>
-                            </ListItemButton>
-                        </ListItem>
-                    )
-                }):<li style={{"margin":"auto"}}>Item doesn't exist</li>}
-            </List>
+            {data.length!==0?(
+                <>
+                    <TextField fullWidth size="small" label="🌟🌟 Type any word over here and see the magic 🌟🌟"  autoComplete='off' value={val} onChange={onChangeSearch} id="fullWidth" />
+                    <List className='item-list'>
+                        {item?item.map((item)=>{
+                            return(
+                                <ListItem disablePadding>
+                                    <ListItemButton onClick={getItem}>
+                                        <li  key="{item}"><b>{val}</b>{item.substring(val.length)}</li>
+                                    </ListItemButton>
+                                </ListItem>
+                            )
+                        }):<li style={{"margin":"auto"}}>Item doesn't exist</li>}
+                    </List>
+                </>
+            ):(
+                <h4>Database is empty , please insert some data in <Link aria-current="page" to="/database">database</Link> section</h4>
+            )}
         </div>
         </>
     )
