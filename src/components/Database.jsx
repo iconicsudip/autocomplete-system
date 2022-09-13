@@ -41,6 +41,7 @@ export default function Database() {
         localStorage.setItem("database", JSON.stringify(updateItmes));
     }
     return (
+        <>
         <div className='database'>
             <TextField label="Type item to add into database" size="small" style={{"width":"70%"}} autoComplete='off' value={val} onChange={onChangedata} id="fullWidth" />
             <Button className='add-item' onClick={addItem} type='submit' variant="contained" color="secondary">Add Item</Button>
@@ -57,5 +58,6 @@ export default function Database() {
                 }):<li style={{"margin":"auto"}}>Item doesn't exist</li>}
             </List>
         </div>
+        </>
     )
 }
