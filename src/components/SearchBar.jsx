@@ -49,7 +49,7 @@ export default function SearchBar() {
     return (
         <>
         <div className='flexSearch'>
-            {data.length!==0?(
+            {data?(
                 <>
                     <TextField fullWidth size="small" label="🌟🌟 Type any word over here and see the magic 🌟🌟"  autoComplete='off' value={val} onChange={onChangeSearch} id="fullWidth" />
                     <List className='item-list'>
