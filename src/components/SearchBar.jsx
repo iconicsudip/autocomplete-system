@@ -1,31 +1,33 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import {Node,add,search} from '../search.js';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import {Link} from "react-router-dom";
 
-export default function SearchBar() {
+export default function SearchBar({items,setItems}) {
     const [val,setVal] = useState("");
     const [item,setItem] = useState([]);
     const node = new Node('');
-    const [data,setData] = useState(()=>localStorage.getItem("database")?JSON.parse(localStorage.getItem("database")):null);
+    console.log(items)
+    useEffect(()=>{
+        setItems(items)
+    },[items,setItems])
     const setTrie = (data)=>{
         for (let str in data){
             add(data[str],node);
         }
     }
-    if(data===null){
+    if(items===null){
         console.log("No data exist in database , Create some data in database section")
     }else{
-        setTrie(data);
+        setTrie(items);
     }
     const onChangeSearch = (e)=>{
         setVal(e.target.value);
         var s = search(e.target.value,node);
         if(s===false){
-            setItem([])
+            setItem(null)
         }
         if(s || e.target.value!==''){
             setItem(s);
@@ -37,7 +39,7 @@ export default function SearchBar() {
             setVal(text);
             var s = search(text,node);
             if(s===false){
-                setItem([])
+                setItem(null)
             }
             if(s ){
                 setItem(s);
@@ -48,16 +50,17 @@ export default function SearchBar() {
     }
     return (
         <>
-        <div className='flexSearch'>
-            {data?(
+        <div >
+            <h1>Auto complete search-engine</h1>
+            {items?(
                 <>
                     <TextField fullWidth size="small" label="🌟🌟 Type any word over here and see the magic 🌟🌟"  autoComplete='off' value={val} onChange={onChangeSearch} id="fullWidth" />
                     <List className='item-list'>
-                        {item?item.map((item)=>{
+                        {item?item.map((item,ind)=>{
                             return(
                                 <ListItem disablePadding>
                                     <ListItemButton onClick={getItem}>
-                                        <li  key="{item}"><b>{val}</b>{item.substring(val.length)}</li>
+                                        <li  key={"item"+ind}><b>{val}</b>{item.substring(val.length)}</li>
                                     </ListItemButton>
                                 </ListItem>
                             )
@@ -65,7 +68,7 @@ export default function SearchBar() {
                     </List>
                 </>
             ):(
-                <h4>Database is empty , please insert some data in <Link aria-current="page" to="/database">database</Link> section</h4>
+                <h5>Database is empty , please insert some data in database section</h5>
             )}
         </div>
         </>

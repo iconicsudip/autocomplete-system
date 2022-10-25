@@ -95,4 +95,15 @@ body{
 .nav-item a:hover{
   color: white;
 }
-
+.twosection{
+  height: 100vh;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  margin: 2rem 0 2rem 0;
+  justify-content: space-around;
+}
+.formadd{
+  width: 100%;
+    display: contents;
+}

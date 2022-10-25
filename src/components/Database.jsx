@@ -5,53 +5,58 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 
-export default function Database() {
+export default function Database({items,setItems}) {
     const [val,setVal] = useState("");
-    let Items;
-    if (localStorage.getItem("database") === null) {
-        Items = [];
-    } else {
-        Items = JSON.parse(localStorage.getItem("database"));
-    }
+    useEffect(() => {
+        localStorage.setItem("database", JSON.stringify(items));
+    }, [items]);
     const onChangedata = (e)=>{
         e.preventDefault();
         setVal(e.target.value);
     }
     
-    const addItem = () => {
+    const addItem = (e) => {
+        e.preventDefault();
         if(val === ""){
             alert("Type any item to add into database")
         }else{
+            if(items===null){
+                items = []
+            }
             items = items.concat(val);
             setItems(items);
             setVal("");
         }
     };
-    let [items, setItems] = useState(Items);
-    useEffect(() => {
-        localStorage.setItem("database", JSON.stringify(items));
-    }, [items]);
+    
     const Delete = (e)=>{
         e.preventDefault()
         var id = e.target.value;
         let updateItmes = items.filter((e) => {
             return e !== items[id];
         });
-        setItems(updateItmes);
+        if(updateItmes.length===0){
+            setItems(null)
+        }else{
+            setItems(updateItmes);
+        }
         localStorage.setItem("database", JSON.stringify(updateItmes));
     }
     return (
         <>
-        <div className='database'>
-            <TextField label="Type item to add into database" size="small" style={{"width":"70%"}} autoComplete='off' value={val} onChange={onChangedata} id="fullWidth" />
-            <Button className='add-item' onClick={addItem} type='submit' variant="contained" color="secondary">Add Item</Button>
+        <div >
+            <h1>Database</h1>
+            <form className='formadd' onSubmit={addItem}>
+                <TextField fullWidth label="Type item to add into database" size="small" style={{"width":"70%"}} autoComplete='off' value={val} onChange={onChangedata} id="fullWidth" />
+                <Button className='add-item' onClick={addItem} type='submit' variant="contained" color="secondary">Add Item</Button>
+            </form>
             <List className='item-list'>
-                {items.length!==0?items.map((item,index)=>{
+                {items?items.map((item,index)=>{
                     return(
                         <ListItem disablePadding>
                             <ListItemButton className='database-item'>
-                                <li key={item} >{item}</li>
-                                <Button className='add-item' value={index} onClick={Delete} size="small" type='submit' variant="contained" color="error">Delete Item</Button>
+                                <li key={"database"+item} >{item}</li>
+                                <Button key={"databasebutton"+item} className='add-item' value={index} onClick={Delete} size="small" type='submit' variant="contained" color="error">Delete Item</Button>
                             </ListItemButton>
                         </ListItem>
                     )

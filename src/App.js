@@ -1,19 +1,23 @@
 import './App.css';
-import Database from './components/Database';
 import SearchBar from './components/SearchBar';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from './components/Header';
+import Database from './components/Database';
+import React,{useState} from 'react'
 
 function App() {
+  let Items;
+  if (localStorage.getItem("database") === "null" || JSON.parse(localStorage.getItem("database")).length===0) {
+    // console.log(JSON.parse(localStorage.getItem("database").length)===0)
+      Items = null;
+  } else {
+      Items = JSON.parse(localStorage.getItem("database"));
+  }
+  let [items, setItems] = useState(Items);
   return (
     <div className="App">
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<SearchBar/>} exact/>
-          <Route path="/database" element={<Database />} exact/>
-        </Routes>
-      </Router>
+      <div className='twosection'>
+        <SearchBar items={items} setItems={setItems}/>
+        <Database items={items} setItems={setItems}/>
+      </div>
     </div>
   );
 }
